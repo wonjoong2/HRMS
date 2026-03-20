@@ -1,0 +1,12 @@
+com.erp.hrms
+com.erp.hrms.config
+com.erp.hrms.controller
+com.erp.hrms.controller.attendance
+com.erp.hrms.controller.chat
+com.erp.hrms.controller.dept
+com.erp.hrms.controller.user
+com.erp.hrms.dto
+com.erp.hrms.Entity
+com.erp.hrms.Repository
+com.erp.hrms.scheduler
+com.erp.hrms.service

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AdminLTE 3 | jsGrid</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" th:href="@{https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{../../adminLte/plugins/fontawesome-free/css/all.min.css}">
+    <!-- jsGrid -->
+    <link rel="stylesheet" th:href="@{../../adminLte/plugins/jsgrid/jsgrid.min.css}">
+    <link rel="stylesheet" th:href="@{../../adminLte/plugins/jsgrid/jsgrid-theme.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{../../adminLte/dist/css/adminlte.min.css}">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="/logout" class="nav-link">로그아웃</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Sidebar Container -->
+        <div th:replace="~{/common/header :: sidebar}"></div>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>사원관리</h1>
+                        </div>
+                        <div class="col-sm-6">
+    <!--                        <ol class="breadcrumb float-sm-right">-->
+    <!--                            <li class="breadcrumb-item"><a href="#">Home</a></li>-->
+    <!--                            <li class="breadcrumb-item active">사원정보조회</li>-->
+    <!--                        </ol>-->
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </section>
+
+            <!--  부서 선택 모달 -->
+            <div class="modal fade" id="deptModal">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h4 class="modal-title">부서 선택</h4>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <input type="text" id="searchDeptName" class="form-control" placeholder="부서명">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" id="searchDeptId" class="form-control" placeholder="부서코드">
+                                </div>
+                                <div class="col-md-2">
+                                    <button id="btnDeptSearch" class="btn btn-primary">검색</button>
+                                </div>
+                            </div>
+                            <div id="deptGrid"></div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                닫기
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">사원조회/등록</h3>
+                    </div>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <input type="text" id="searchName" class="form-control" placeholder="이름">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" id="searchEmail" class="form-control" placeholder="이메일">
+                            </div>
+                            <div class="col-md-3">
+                                <select id="searchStatus" class="form-control">
+                                    <option value="">재직구분</option>
+                                    <option value="재직">재직</option>
+                                    <option value="퇴사">퇴사</option>
+                                    <option value="휴직">휴직</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button id="btnSearch" class="btn btn-primary">검색</button>
+                            </div>
+                        </div>
+                        <div id="jsGrid1"></div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+<!--        <footer class="main-footer">-->
+<!--            <div class="float-right d-none d-sm-block">-->
+<!--                <b>Version</b> 3.1.0-->
+<!--            </div>-->
+<!--            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.-->
+<!--        </footer>-->
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+
+
+
+    <!-- 비밀번호 찾기 모달 -->
+    <div class="modal fade" id="passwordModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">비밀번호 재설정</h4>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="email" id="resetEmail" class="form-control" placeholder="이메일 입력">
+                </div>
+
+                <div class="modal-footer">
+                    <button id="btnResetPassword" class="btn btn-primary">임시 비밀번호 발송</button>
+                    <button class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script th:src="@{/adminLte/plugins/jquery/jquery.min.js}"></script>
+    <!-- Bootstrap 4 -->
+    <script th:src="@{/adminLte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <!-- jsGrid -->
+    <!--<script th:src="@{../../adminLte/plugins/jsgrid/demos/db.js}"></script>-->
+    <script th:src="@{/adminLte/plugins/jsgrid/jsgrid.min.js}"></script>
+    <!-- AdminLTE App -->
+    <script th:src="@{/adminLte/dist/js/adminlte.min.js}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script th:src="@{/adminLte/dist/js/demo.js}"></script>
+    <!-- Page specific script -->
+    <script>
+        $(function () {
+            $("#jsGrid1").jsGrid({
+                width: "100%",
+                height: "500px",
+
+                inserting: true,
+                editing: true,
+                sorting: true,
+                paging: true,
+                autoload: true,
+
+                pageSize: 10,
+
+                controller: {
+                    loadData: function() {
+                        return $.ajax({
+                            type: "GET",
+                            url: "/user/list",
+                            data: {
+                                name: $("#searchName").val(),
+                                email: $("#searchEmail").val(),
+                                status: $("#searchStatus").val()
+                            },
+                        });
+                    },
+                    insertItem: function(item) {
+                        return $.ajax({
+                            type: "POST",
+                            url: "/user/register",
+                            data: JSON.stringify(item),
+                            contentType: "application/json"
+                        });
+                    },
+                    updateItem: function(item) {
+                        return $.ajax({
+                            type: "PUT",
+                            url: "/user/update/" + item.id,
+                            data: JSON.stringify(item),
+                            contentType: "application/json"
+                        });
+                    },
+                    deleteItem: function(item) {
+                        return $.ajax({
+                            type: "DELETE",
+                            url: "/user/delete/" + item.id
+                        });
+                    }
+                },
+
+                fields: [
+                    { name: "name", title:"이름", type: "text", width: 100, validate: "required"},
+                    {
+                        name: "dept_name",
+                        title: "부서명",
+                        type: "text",
+                        insertTemplate: function() {
+
+                            this._insertInput = $("<input>")
+                                .addClass("form-control")
+                                .attr("readonly", true)
+                                .click(function() {
+                                    $("#deptModal").modal("show");
+                                });
+
+                            return this._insertInput;
+                        },
+                        editTemplate: function(value) {
+
+                            this._editInput = $("<input>")
+                                .addClass("form-control")
+                                .attr("readonly", true)
+                                .val(value)
+                                .click(function() {
+                                    $("#deptModal").modal("show");
+                                });
+
+                            return this._editInput;
+                        },
+
+                        insertValue: function() {
+                            return this._insertInput.val();
+                        },
+
+                        editValue: function() {
+                            return this._editInput.val();
+                        }
+                    },
+                    {
+                        name: "dept_id",
+                        title: "부서코드",
+                        type: "text",
+
+                        insertTemplate: function() {
+                            this._insertDeptInput = $("<input>")
+                                .addClass("form-control")
+                                .attr("readonly", true);
+                            return this._insertDeptInput;
+                        },
+
+                        editTemplate: function(value) {
+                            this._editDeptInput = $("<input>")
+                                .addClass("form-control")
+                                .attr("readonly", true)
+                                .val(value);
+                            return this._editDeptInput;
+                        },
+
+                        insertValue: function() {
+                            return this._insertDeptInput.val();
+                        },
+
+                        editValue: function() {
+                            return this._editDeptInput.val();
+                        }
+                    },
+                    { name: "email", title:"이메일", type: "text", width: 150 },
+                    {
+                        name: "password",
+                        title: "비밀번호",
+                        type: "password",
+                        width: 150,
+
+                        itemTemplate: function(value) {
+                            if (!value) return "";
+                            return "********";
+                        },
+
+                        insertTemplate: function() {
+                            return this._insertInput = $("<input>").attr("type", "password");
+                        },
+
+                        editTemplate: function(value) {
+                            return this._editInput = $("<input>")
+                                .attr("type", "password")
+                                .attr("readonly", true)
+                                .val(value);
+                        },
+
+                        insertValue: function() {
+                            return this._insertInput.val();
+                        },
+
+                        editValue: function() {
+                            return this._editInput.val();
+                        }
+                    },
+                    // { name: "role", type: "text", width: 150 },
+                    {
+                        name: "hire_date",
+                        title: "입사일",
+                        type: "text",
+                        insertTemplate: function() {
+                            return this._insertPicker = $("<input>").attr("type", "date");
+                        },
+                        editTemplate: function(value) {
+                            return this._editPicker = $("<input>")
+                                .attr("type", "date")
+                                .val(value ? value.substring(0, 10) : "");
+                        },
+                        insertValue: function() {
+                            return this._insertPicker.val();
+                        },
+                        editValue: function() {
+                            return this._editPicker.val();
+                        }
+                    },
+                    {
+                        name: "status",
+                        title: "재직구분",
+                        type: "select",
+                        items: [
+                            { text: "재직", value: "재직" },
+                            { text: "퇴사", value: "퇴사" },
+                            { text: "휴직", value: "휴직" }
+                        ],
+                        valueField: "value",
+                        textField: "text",
+                        width: 100
+                    },
+                    { type: "control" }
+                ]
+            });
+            $("#btnSearch").on("click", function () {
+                $("#jsGrid1").jsGrid("loadData");
+            });
+            // 부서 선택 모달 그리드
+            $("#deptModal").on("shown.bs.modal", function () {
+
+                if ($("#deptGrid").data("JSGrid")) return; // 중복 생성 방지
+
+                $("#deptGrid").jsGrid({
+                    width: "100%",
+                    height: "300px",
+
+                    sorting: true,
+                    paging: true,
+                    autoload: true,
+
+                    controller: {
+                        loadData: function() {
+                            return $.ajax({
+                                type: "GET",
+                                url: "/dept/list",
+                                data: {
+                                    searchDeptName: $("#searchDeptName").val(),
+                                    searchDeptId: $("#searchDeptId").val()
+                                },
+                            });
+                        }
+                    },
+                    rowClick: function(args) {
+
+                        let dept = args.item;
+
+                        let grid = $("#jsGrid1").data("JSGrid");
+
+                        let deptIdField = grid.fields.find(f => f.name === "dept_id");
+                        let deptNameField = grid.fields.find(f => f.name === "dept_name");
+
+                        if (deptNameField._editInput) {
+                            deptNameField._editInput.val(dept.deptName);
+                            deptIdField._editDeptInput.val(dept.deptId);
+                        }
+                        else if (deptNameField._insertInput) {
+                            deptNameField._insertInput.val(dept.deptName);
+                            deptIdField._insertDeptInput.val(dept.deptId);
+                        }
+
+                        $("#deptModal").modal("hide");
+                    },
+
+                    fields: [
+                        { name: "deptName", title: "부서명", type: "text" },
+                        { name: "deptId", title: "부서코드", type: "text" },
+                    ]
+                });
+
+            });
+            $("#btnDeptSearch").on("click", function () {
+                $("#deptGrid").jsGrid("loadData");
+            });
+        });
+    </script>
+    </body>
+</html>
+
+<script>
+
+</script>

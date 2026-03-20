@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI 근태분석</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" th:href="@{https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{../../adminLte/plugins/fontawesome-free/css/all.min.css}">
+    <!-- jsGrid -->
+    <link rel="stylesheet" th:href="@{../../adminLte/plugins/jsgrid/jsgrid.min.css}">
+    <link rel="stylesheet" th:href="@{../../adminLte/plugins/jsgrid/jsgrid-theme.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{../../adminLte/dist/css/adminlte.min.css}">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Main Sidebar Container -->
+<!--    <div th:replace="~{/common/header :: sidebar}"></div>-->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+<!--        <section class="content-header">-->
+<!--            <div class="container-fluid">-->
+<!--                <div class="row mb-2">-->
+<!--                    <div class="col-sm-6">-->
+<!--                        <h1>조직관리</h1>-->
+<!--                    </div>-->
+<!--                    <div class="col-sm-6">-->
+
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>&lt;!&ndash; /.container-fluid &ndash;&gt;-->
+<!--        </section>-->
+
+        <!--  부서 선택 모달 -->
+        <div class="modal fade" id="deptModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h4 class="modal-title">부서 선택</h4>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <input type="text" id="modalDeptName" class="form-control" placeholder="부서명">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" id="modalDeptId" class="form-control" placeholder="부서코드">
+                            </div>
+                            <div class="col-md-2">
+                                <button id="modalDeptSearch" class="btn btn-primary">검색</button>
+                            </div>
+                        </div>
+                        <div id="deptGrid"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            닫기
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">AI 근태분석</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="analysisType" value="PERSON" checked>
+                                <label class="form-check-label">개인 근태 분석</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="analysisType" value="DEPT">
+                                <label class="form-check-label">부서 근태 분석</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="analysisType" value="ABNORMAL">
+                                <label class="form-check-label">이상 근태 분석</label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="personSearch" class="row mb-3">
+
+                        <div class="col-md-3">
+                            <input type="text" id="searchName" class="form-control" placeholder="이름">
+                        </div>
+
+                        <div class="col-md-3">
+                            <input type="date" id="searchDateFrm" class="form-control">
+                        </div>
+
+                        <div class="col-md-3">
+                            <input type="date" id="searchDateTo" class="form-control">
+                        </div>
+
+                        <div class="col-md-2">
+                            <button id="perAnalysis" class="btn btn-primary" onclick="aiAnalysis('per')">분석</button>
+                        </div>
+
+                    </div>
+                    <div id="deptSearch" class="row mb-3" style="display:none">
+
+                        <div class="col-md-2">
+                            <input type="text" id="searchDeptName" class="form-control" placeholder="부서명" onclick="deptPop()">
+                        </div>
+
+                        <div class="col-md-2">
+                            <input type="text" id="searchDeptId" class="form-control" placeholder="부서코드" disabled>
+                        </div>
+
+                        <div class="col-md-3">
+                            <input type="date" id="searchDeptDateFrm" class="form-control">
+                        </div>
+
+                        <div class="col-md-3">
+                            <input type="date" id="searchDeptDateTo" class="form-control">
+                        </div>
+
+                        <div class="col-md-2">
+                            <button id="deptAnalysis" class="btn btn-primary" onclick="aiAnalysis('dept')">분석</button>
+                        </div>
+
+                    </div>
+
+                    <div id="abnormalSearch" class="row mb-3" style="display:none">
+
+                        <div class="col-md-4">
+                            <button id="abAnalysis" class="btn btn-danger" onclick="aiAnalysis('ab')">이상 근태 분석 시작</button>
+                        </div>
+
+                    </div>
+
+                    <textarea id="aiResult" class="form-control" rows="10" placeholder="Enter ..."></textarea>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </section>
+        <!-- /.content -->
+    </div>
+
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script th:src="@{/adminLte/plugins/jquery/jquery.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/adminLte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- jsGrid -->
+<!--<script th:src="@{../../adminLte/plugins/jsgrid/demos/db.js}"></script>-->
+<script th:src="@{/adminLte/plugins/jsgrid/jsgrid.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/adminLte/dist/js/adminlte.min.js}"></script>
+<!-- AdminLTE for demo purposes -->
+<!--<script th:src="@{/adminLte/dist/js/demo.js}"></script>-->
+<!-- Page specific script -->
+<script>
+
+    function aiAnalysis(type){
+        if(type === 'per'){
+            let name = $("#searchName").val();
+            let dateFrm = $("#searchDateFrm").val();
+            let dateTo = $("#searchDateTo").val();
+
+            $.ajax({
+                url: "/ai/attendance/perAnalysis",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    name: name,
+                    dateFrm: dateFrm,
+                    dateTo: dateTo,
+                }),
+                success: function(result){
+                    $("#aiResult").val(result);
+                }
+            });
+        }else if(type === 'dept'){
+            let deptId = $("#searchDeptId").val();
+            let dateFrm = $("#searchDeptDateFrm").val();
+            let dateTo = $("#searchDeptDateTo").val();
+            $.ajax({
+                url: "/ai/attendance/deptAnalysis",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    deptId: deptId,
+                    dateFrm: dateFrm,
+                    dateTo: dateTo,
+                }),
+                success: function(result){
+                    $("#aiResult").val(result);
+                }
+            });
+
+        }else if(type === 'ab'){
+            $.ajax({
+                url: "/ai/attendance/abAnalysis",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    // name: name,
+                    // dateFrm: dateFrm,
+                    // dateTo: dateTo,
+                }),
+                success: function(result){
+                    $("#aiResult").val(result);
+                }
+            });
+        }
+
+    }
+
+    $("input[name='analysisType']").change(function () {
+
+        let type = $(this).val();
+
+        $("#personSearch").hide();
+        $("#deptSearch").hide();
+        $("#abnormalSearch").hide();
+
+        if(type === "PERSON"){
+            $("#personSearch").show();
+        }
+
+        if(type === "DEPT"){
+            $("#deptSearch").show();
+        }
+
+        if(type === "ABNORMAL"){
+            $("#abnormalSearch").show();
+        }
+
+    });
+
+    function deptPop(){
+        $("#deptModal").modal("show");
+    }
+
+    $("#modalDeptSearch").click(function(){
+        $("#deptGrid").jsGrid("loadData");
+    });
+
+    $("#deptModal").on("shown.bs.modal", function () {
+
+        $("#deptGrid").jsGrid({
+            width: "100%",
+            height: "300px",
+
+            sorting: true,
+            paging: true,
+            autoload: true,
+
+            controller: {
+                loadData: function() {
+                    return $.ajax({
+                        type: "GET",
+                        url: "/dept/list",
+                        data: {
+                            searchDeptName: $("#modalDeptName").val(),
+                            searchDeptId: $("#modalDeptId").val()
+                        }
+                    });
+                }
+            },
+
+            fields: [
+                { name: "deptId", title: "부서코드", type: "text", width: 100 },
+                { name: "deptName", title: "부서명", type: "text", width: 200 }
+            ],
+
+            rowClick: function(args){
+                selectDept(args.item);
+            }
+        });
+
+    });
+
+    function selectDept(dept){
+
+        $("#searchDeptName").val(dept.deptName);
+        $("#searchDeptId").val(dept.deptId);
+
+        $("#deptModal").modal("hide");
+    }
+</script>
+</body>
+</html>

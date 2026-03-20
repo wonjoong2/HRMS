@@ -1,0 +1,159 @@
+//        for (int i = 1; i <= 100; i++) {
+//
+//            User user = new User();
+//
+//            Faker faker = new Faker();
+//            user.setName(faker.name().fullName());
+//            user.setEmail(faker.internet().emailAddress());
+//
+//            //테스트를 위한 비밀번호 하드코딩
+//            user.setPassword(passwordEncoder.encode("1234"));
+//
+//            //String rawPassword = faker.internet().password();
+//            //user.setPassword(passwordEncoder.encode(rawPassword));
+//
+//            user.setHire_date(LocalDate.now().minusDays(faker.number().numberBetween(1, 1000)));
+//            user.setStatus("재직");
+//            user.setUseYn("Y");
+//            user.setCreated_dt(LocalDateTime.now());
+//
+//            userRepository.save(user);
+//        }
+
+//        Random random = new Random();
+//
+//        List<Attendance> attendanceList = new ArrayList<>();
+//
+//        for (int userId = 2; userId <= 101; userId++) {
+//
+//            User user = userRepository.findById((long) userId).orElseThrow();
+//
+//            // 부서 id
+//            String deptId = user.getDept().getDeptId();
+//
+//            // 부서 근무시간
+//            WorkSchedule schedule =
+//                    workScheduleRepository.findByDeptId(deptId)
+//                            .orElseThrow();
+//
+//            LocalTime baseStart = schedule.getStartTime();
+//            LocalTime baseEnd = schedule.getEndTime();
+//            int breakMinutes = schedule.getBreakMinutes();
+//
+//            for (int d = 0; d < 260; d++) {
+//
+//                LocalDate workDate = LocalDate.now().minusDays(d);
+//
+//                // 주말 제외
+//                DayOfWeek day = workDate.getDayOfWeek();
+//                if(day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY){
+//                    continue;
+//                }
+//
+//                // 공휴일 제외
+//                boolean isHoliday = holidayRepository.existsByHolidayDate(workDate);
+//                if (isHoliday) {
+//                    continue;
+//                }
+//
+//                // 결근 확률 3%
+//                if(random.nextInt(100) < 3){
+//                    continue;
+//                }
+//
+//                /*
+//                 출근시간 생성
+//                 정상 85%
+//                 지각 12%
+//                 심한지각 3%
+//                */
+//
+//                int rand = random.nextInt(100);
+//                LocalTime checkIn;
+//
+//                if (rand < 85) {
+//                    int offset = random.nextInt(10) - 5; // -5 ~ +4
+//                    checkIn = baseStart.plusMinutes(offset);
+//
+//                } else if (rand < 97) {
+//                    int offset = random.nextInt(30) + 5; // +5 ~ +34
+//                    checkIn = baseStart.plusMinutes(offset);
+//
+//                } else {
+//                    int offset = random.nextInt(60) + 30; // +30 ~ +89
+//                    checkIn = baseStart.plusMinutes(offset);
+//                }
+//
+//                /*
+//                 퇴근시간 생성
+//                 정상 80%
+//                 야근 20%
+//                */
+//
+//                int randOut = random.nextInt(100);
+//                int checkOutOffset;
+//
+//                if(randOut < 80){
+//                    checkOutOffset = random.nextInt(20) - 10; // -10 ~ +9
+//                }else{
+//                    checkOutOffset = random.nextInt(120); // 야근
+//                }
+//
+//                LocalTime checkOut = baseEnd.plusMinutes(checkOutOffset);
+//
+//                // 근무시간
+//                int workMinutes =
+//                        (int) Duration.between(checkIn, checkOut).toMinutes()
+//                                - breakMinutes;
+//
+//                if (workMinutes < 0) {
+//                    workMinutes = 0;
+//                }
+//
+//                // 지각
+//                int lateMinutes = Math.max(
+//                        (int) Duration.between(baseStart, checkIn).toMinutes(),
+//                        0
+//                );
+//
+//                // 조퇴
+//                int earlyLeaveMinutes = Math.max(
+//                        (int) Duration.between(checkOut, baseEnd).toMinutes(),
+//                        0
+//                );
+//
+//                // 초과근무
+//                int overtimeMinutes = Math.max(
+//                        (int) Duration.between(baseEnd, checkOut).toMinutes(),
+//                        0
+//                );
+//
+//                // 상태 계산
+//                String status = "정상";
+//
+//                if (lateMinutes > 0 && earlyLeaveMinutes > 0) {
+//                    status = "지각+조퇴";
+//                } else if (lateMinutes > 0) {
+//                    status = "지각";
+//                } else if (earlyLeaveMinutes > 0) {
+//                    status = "조퇴";
+//                }
+//
+//                Attendance a = new Attendance();
+//                a.setUser(user);
+//                a.setWork_date(workDate);
+//                a.setCheck_in_time(checkIn);
+//                a.setCheck_out_time(checkOut);
+//                a.setWork_minutes(workMinutes);
+//                a.setLate_minutes(lateMinutes);
+//                a.setEarly_leave_minutes(earlyLeaveMinutes);
+//                a.setOvertime_minutes(overtimeMinutes);
+//                a.setAttendance_status(status);
+//                a.setCreated_dt(LocalDateTime.now());
+//
+//                attendanceList.add(a);
+//            }
+//        }
+//
+//        // 한번에 저장 (성능 개선)
+//        attendanceRepository.saveAll(attendanceList);

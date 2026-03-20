@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{../../adminLte/plugins/fontawesome-free/css/all.min.css}">
+    <!-- jsGrid -->
+    <link rel="stylesheet" th:href="@{../../adminLte/plugins/jsgrid/jsgrid.min.css}">
+    <link rel="stylesheet" th:href="@{../../adminLte/plugins/jsgrid/jsgrid-theme.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{../../adminLte/dist/css/adminlte.min.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+    <body>
+        <!-- 비밀번호 찾기 모달 -->
+        <div class="modal fade" id="passwordModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h4 class="modal-title">비밀번호 재설정</h4>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="email" id="resetEmail" class="form-control" placeholder="이메일 입력">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="btnResetPassword" class="btn btn-primary">임시 비밀번호 발송</button>
+                        <button class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <!-- Sign Up -->
+            <div class="container__form container--signup">
+                <form th:action="@{/signup}" class="form" id="form1" method="POST">
+                    <h2 class="form__title">회원가입</h2>
+
+                    <input type="text" name="name" placeholder="이름" class="form-control mb-2" />
+
+                    <input type="email" name="email" class="form-control" placeholder="이메일">
+                    <button type="button" id="sendAuthBtn" class="btn btn-primary  mb-3">인증번호받기</button>
+
+                    <input type="text" name="authCode" placeholder="인증번호" class="form-control mb-2" />
+                    <input type="password" name="password" placeholder="비밀번호" class="form-control mb-2" />
+
+                    <button type="submit" class="btn btn-primary">회원가입</button>
+                </form>
+            </div>
+
+            <!-- Sign In -->
+            <div class="container__form container--signin">
+                <form th:action="@{/login}" class="form" id="form2" method="POST">
+                    <h2 class="form__title">HRMS 시작하기</h2>
+<!--                    <input type="email" name="username" placeholder="Email" class="input" />-->
+                    <input type="text" name="username" placeholder="Email" class="input" value="admin" />
+                    <input type="password" name="password" placeholder="Password" class="input" />
+                    <a href="#" id="forgotPasswordLink" class="link">비밀번호를 잊으셨나요?</a>
+                    <button type="submit" class="btn">로그인</button>
+                </form>
+            </div>
+
+            <!-- Overlay -->
+            <div class="container__overlay">
+                <div class="overlay">
+                    <div class="overlay__panel overlay--left">
+                        <button class="btn" id="signIn">HRMS 시작하기</button>
+                    </div>
+                    <div class="overlay__panel overlay--right">
+                        <button class="btn" id="signUp">회원가입</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<script th:src="@{/adminLte/plugins/jquery/jquery.min.js}"></script>
+<script th:src="@{/adminLte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script>
+    const signInBtn = document.getElementById("signIn");
+    const signUpBtn = document.getElementById("signUp");
+    const container = document.querySelector(".container");
+
+    signInBtn.addEventListener("click", () => {
+        container.classList.remove("right-panel-active");
+    });
+
+    signUpBtn.addEventListener("click", () => {
+        container.classList.add("right-panel-active");
+    });
+
+
+    document.getElementById("sendAuthBtn").addEventListener("click", function(){
+
+        const email = document.querySelector("input[name='email']").value;
+
+        fetch("/sendAuthCode",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/x-www-form-urlencoded"
+            },
+            body:"email="+email
+        })
+            .then(res => res.text())
+            .then(data=>{
+                alert("인증번호가 이메일로 전송되었습니다.");
+            });
+
+    });
+
+    // 비밀번호 찾기 모달 열기
+    $("#forgotPasswordLink").on("click", function(e){
+        e.preventDefault();
+        $("#passwordModal").modal("show");
+    });
+
+    // 임시 비밀번호 요청
+    $("#btnResetPassword").on("click", function(){
+
+        let email = $("#resetEmail").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/resetPassword",
+            data: { email: email },
+            success: function(){
+                alert("임시 비밀번호가 이메일로 전송되었습니다.");
+                $("#passwordModal").modal("hide");
+            },
+            error: function(){
+                alert("가입된 이메일이 아닙니다.");
+            }
+        });
+
+    });
+</script>
+
+<script th:if="${signupFail}">
+    alert("인증번호가 일치하지 않습니다.");
+</script>
+
+<script th:if="${signupSuccess}">
+    alert("회원가입이 완료되었습니다.");
+</script>
+
+<script th:if="${param.error}">
+    alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+</script>
