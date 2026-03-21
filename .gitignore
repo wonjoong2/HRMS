@@ -37,7 +37,8 @@ out/
 .vscode/
 
 ### openAI KEY
-*.yml
+docker-compose.yml
+/prometheus/prometheus.yml
 
 
 # Docker volumes
@@ -51,5 +52,3 @@ grafana/
 
 # OS
 .DS_Store
-
-/src/main/resources/application.properties
