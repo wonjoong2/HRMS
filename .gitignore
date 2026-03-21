@@ -39,6 +39,9 @@ out/
 ### openAI KEY
 docker-compose.yml
 /prometheus/prometheus.yml
+/src/main/resources/application.properties
+/src/main/resources/application.yml
+
 
 
 # Docker volumes
