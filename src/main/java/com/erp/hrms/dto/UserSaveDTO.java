@@ -16,6 +16,7 @@ public class UserSaveDTO {
     private String password;
     private String hire_date;
     private String status;
+    private String role;
     private LocalDateTime created_dt;
 
 }

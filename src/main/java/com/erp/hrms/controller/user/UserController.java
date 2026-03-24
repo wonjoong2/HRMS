@@ -72,6 +72,7 @@ public class UserController {
         System.out.println("password: " + dto.getPassword());
         System.out.println("hire_date: " + dto.getHire_date());
         System.out.println("status: " + dto.getStatus());
+        System.out.println("role: " + dto.getRole());
 
         return userService.register(dto);
     }

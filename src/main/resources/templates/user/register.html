@@ -306,7 +306,7 @@
                         width: 150,
 
                         itemTemplate: function(value) {
-                            if (!value) return "";
+                            // if (!value) return "";
                             return "********";
                         },
 
@@ -329,7 +329,6 @@
                             return this._editInput.val();
                         }
                     },
-                    // { name: "role", type: "text", width: 150 },
                     {
                         name: "hire_date",
                         title: "입사일",
@@ -356,7 +355,20 @@
                         items: [
                             { text: "재직", value: "재직" },
                             { text: "퇴사", value: "퇴사" },
-                            { text: "휴직", value: "휴직" }
+                            { text: "휴직", value: "휴직" },
+                        ],
+                        valueField: "value",
+                        textField: "text",
+                        width: 100
+                    },
+                    {
+                        name: "role",
+                        title: "역할구분",
+                        type: "select",
+                        items: [
+                            { text: "관리자", value: "ROLE_ADMIN" },
+                            { text: "사용자", value: "ROLE_USER" },
+                            { text: "게스트", value: "ROLE_GUEST" },
                         ],
                         valueField: "value",
                         textField: "text",

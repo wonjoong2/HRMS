@@ -40,6 +40,7 @@ public class UserService {
         user.setCreated_dt(dto.getCreated_dt());
         user.setDept(dept);
         user.setUseYn("Y");
+        user.setRole(dto.getRole());
 
         User saved = userRepository.save(user);
 
@@ -62,6 +63,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("부서 없음"));
 
         user.setDept(dept);
+        user.setRole(dto.getRole());
 
         User saved = userRepository.save(user);
 

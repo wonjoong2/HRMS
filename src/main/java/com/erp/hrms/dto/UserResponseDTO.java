@@ -15,15 +15,15 @@ public class UserResponseDTO {
     private String dept_name;
     private String hire_date;
     private String status;
-    private String password;
+    private String role;
 
     public UserResponseDTO(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
         this.hire_date = user.getHire_date().toString();
-        this.password = user.getPassword();
         this.status = user.getStatus();
+        this.role = user.getRole();
 
         if(user.getDept() != null) {
             this.dept_id = user.getDept().getDeptId();

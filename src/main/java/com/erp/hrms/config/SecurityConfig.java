@@ -21,9 +21,6 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**","/adminLte/**","/signup","/sendAuthCode","/resetPassword","/actuator/**").permitAll()   // ← 이 부분
-                        // 로그인 사용자
-                        .requestMatchers("/chat/**").authenticated()
-                        .requestMatchers("/attendance/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
