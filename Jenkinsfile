@@ -9,14 +9,6 @@ pipeline {
 
     stages {
 
-        stage('Git Clone') {
-            steps {
-                git
-                    url: 'https://github.com/wonjoong2/HRMS.git',
-                    branch: 'master'
-            }
-        }
-
         stage('Build') {
             steps {
                 sh '''
