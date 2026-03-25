@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DB_PASSWORD = credentials('DB_PASSWORD')
-        OPENAI_KEY = credentials('OPENAI_KEY')
+        OPENAI_API_KEY = credentials('OPENAI_API_KEY')
         MAIL_PASSWORD = credentials('MAIL_PASSWORD')
     }
 
