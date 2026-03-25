@@ -1,12 +1,12 @@
 openai:
-  api-key: ${OPENAI_KEY}
+  api-key: ${OPENAI_API_KEY}
 
 spring:
   mail:
     host: smtp.gmail.com
     port: 587
     username: wjkim0331@gmail.com
-    password: ${GMAIL_PASS}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
