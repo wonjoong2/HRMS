@@ -24,6 +24,9 @@ pipeline {
                 pkill -f 'java -jar' || true
 
                 BUILD_ID=dontKillMe nohup java -jar build/libs/*.jar \
+                --spring.datasource.password=$DB_PASSWORD \
+                --spring.mail.password=$MAIL_PASSWORD \
+                --openai.api-key=$OPENAI_API_KEY \
                 > app.log 2>&1 &
                 '''
             }
