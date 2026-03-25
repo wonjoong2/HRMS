@@ -23,11 +23,10 @@ pipeline {
                 sh '''
                 pkill -f 'java -jar' || true
 
-                BUILD_ID=dontKillMe nohup java -jar build/libs/hrms-0.0.1-SNAPSHOT.jar \
+                java -jar build/libs/hrms-0.0.1-SNAPSHOT.jar \
                 --spring.datasource.password=$DB_PASSWORD \
                 --spring.mail.password=$MAIL_PASSWORD \
-                --openai.api-key=$OPENAI_API_KEY \
-                > app.log 2>&1 &
+                --openai.api-key=$OPENAI_API_KEY
                 '''
             }
         }
