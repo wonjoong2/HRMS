@@ -11,9 +11,9 @@ pipeline {
 
         stage('Git Clone') {
             steps {
-                git credentialsId: 'github-token',
+                git
                     url: 'https://github.com/wonjoong2/HRMS.git',
-                    branch: 'main'
+                    branch: 'master'
             }
         }
 
