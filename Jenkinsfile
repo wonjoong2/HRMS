@@ -21,7 +21,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                pkill -f java || true
+                pkill -f 'java -jar' || true
 
                 java -jar build/libs/hrms-0.0.1-SNAPSHOT.jar \
                 --spring.datasource.password=$DB_PASSWORD \
