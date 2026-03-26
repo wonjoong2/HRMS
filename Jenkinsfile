@@ -27,9 +27,7 @@ pipeline {
 
                     JAR_FILE=$(ls build/libs/*.jar | grep -v plain | head -n 1)
 
-                    echo "===== SPRING BOOT START ====="
-
-                    java -jar $JAR_FILE --server.port=8082
+                    BUILD_ID=dontKillMe nohup java -jar $JAR_FILE --server.port=8082 > app.log 2>&1 &
                     '''
                 }
             }
