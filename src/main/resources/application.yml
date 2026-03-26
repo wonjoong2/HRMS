@@ -15,7 +15,7 @@ spring:
             enable: true
   datasource:
     url: jdbc:mysql://192.168.200.67:3306/mall
-    username: root
+    username: hrms
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
