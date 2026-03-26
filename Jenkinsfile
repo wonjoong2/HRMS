@@ -19,7 +19,7 @@ pipeline {
             steps {
                 sh '''
                 pkill -f 'java -jar' || true
-                nohup java -jar build/libs/*.jar > app.log 2>&1 &
+                nohup java -jar build/libs/*SNAPSHOT.jar > app.log 2>&1 &
                 '''
             }
         }
