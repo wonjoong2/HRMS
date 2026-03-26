@@ -19,7 +19,10 @@ pipeline {
             steps {
                 sh '''
                 pkill -f 'java -jar' || true
-                nohup java -jar build/libs/*SNAPSHOT.jar > app.log 2>&1 &
+
+                JAR_FILE=$(ls build/libs/*SNAPSHOT.jar | grep -v plain)
+
+                nohup java -jar $JAR_FILE --server.port=8082 > app.log 2>&1 &
                 '''
             }
         }
