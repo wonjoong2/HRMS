@@ -60,11 +60,17 @@
             <div class="container__form container--signin">
                 <form th:action="@{/login}" class="form" id="form2" method="POST">
                     <h2 class="form__title">HRMS 시작하기</h2>
-<!--                    <input type="email" name="username" placeholder="Email" class="input" />-->
-                    <input type="text" name="username" placeholder="Email" class="input" value="admin" />
-                    <input type="password" name="password" placeholder="Password" class="input" />
+                    <input type="text" name="username" placeholder="Email" class="input"/>
+                    <input type="password" id ="password" name="password" placeholder="Password" class="input" />
                     <a href="#" id="forgotPasswordLink" class="link">비밀번호를 잊으셨나요?</a>
-                    <button type="submit" class="btn">로그인</button>
+                    <div class="d-flex">
+                        <button type="submit" class="btn flex-fill mr-2" style="white-space: nowrap;">
+                            로그인
+                        </button>
+                        <button type="button" class="btn btn-secondary flex-fill" id="testLoginBtn" style="white-space: nowrap;">
+                            테스트
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -72,7 +78,7 @@
             <div class="container__overlay">
                 <div class="overlay">
                     <div class="overlay__panel overlay--left">
-                        <button class="btn" id="signIn">HRMS 시작하기3</button>
+                        <button class="btn" id="signIn">HRMS 시작하기</button>
                     </div>
                     <div class="overlay__panel overlay--right">
                         <button class="btn" id="signUp">회원가입</button>
@@ -140,6 +146,13 @@
             }
         });
 
+    });
+
+    document.getElementById("testLoginBtn").addEventListener("click", function() {
+        document.querySelector("input[name='username']").value = "guest";
+        document.querySelector("input[id='password']").value = "1234";
+
+        document.getElementById("form2").submit();
     });
 </script>
 
