@@ -27,7 +27,9 @@ pipeline {
 
                     JAR_FILE=$(ls build/libs/*.jar | grep -v plain | head -n 1)
 
-                    BUILD_ID=dontKillMe nohup java -jar $JAR_FILE --server.port=8082 > app.log 2>&1 &
+                    echo "===== 실행 시작 ====="
+
+                    java -jar $JAR_FILE --server.port=8082
                     '''
                 }
             }
