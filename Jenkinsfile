@@ -29,7 +29,7 @@ pipeline {
 
                     echo "===== 실행 시작 ====="
 
-                    java -jar $JAR_FILE --server.port=8080
+                    java -jar $JAR_FILE --server.port=8082
                     '''
                 }
             }
