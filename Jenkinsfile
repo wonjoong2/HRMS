@@ -27,9 +27,14 @@ pipeline {
 
                     JAR_FILE=$(ls build/libs/*.jar | grep -v plain | head -n 1)
 
-                    echo "===== 실행 시작 ====="
+                    echo "===== BACKGROUND RUN START ====="
 
-                    java -jar $JAR_FILE --server.port=8082
+                    BUILD_ID=dontKillMe nohup java -jar $JAR_FILE --server.port=8082 > app.log 2>&1 &
+
+                    sleep 3
+
+                    echo "===== APP LOG ====="
+                    cat app.log
                     '''
                 }
             }
