@@ -1,32 +1,25 @@
 pipeline {
     agent any
 
-    environment {
-        DB_PASSWORD = credentials('DB_PASSWORD')
-        OPENAI_API_KEY = credentials('OPENAI_API_KEY')
-        MAIL_PASSWORD = credentials('MAIL_PASSWORD')
-    }
-
     stages {
-
-        stage('Build') {
+        stage('Clone') {
             steps {
-                sh '''
-                chmod +x gradlew
-                ./gradlew clean build -x test
-                '''
+                git 'https://github.com/wonjoong2/HRMS.git'
             }
         }
 
-        stage('Deploy') {
+        stage('Build') {
+            steps {
+                sh 'chmod +x gradlew'
+                sh './gradlew build -x test'
+            }
+        }
+
+        stage('Run') {
             steps {
                 sh '''
                 pkill -f 'java -jar' || true
-
-                java -jar build/libs/hrms-0.0.1-SNAPSHOT.jar \
-                --spring.datasource.password=$DB_PASSWORD \
-                --spring.mail.password=$MAIL_PASSWORD \
-                --openai.api-key=$OPENAI_API_KEY
+                nohup java -jar build/libs/*.jar > app.log 2>&1 &
                 '''
             }
         }
