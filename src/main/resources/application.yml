@@ -14,9 +14,9 @@ spring:
           starttls:
             enable: true
   datasource:
-    url: jdbc:mysql://gallant_cannon:3306/hrms
-    username: root
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://192.168.200.67:3306/mall
+    username: hrms
+    password: Hrms1234!
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 management:
