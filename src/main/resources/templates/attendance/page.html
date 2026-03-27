@@ -117,42 +117,30 @@
             sorting: true,
             paging: true,
             autoload: true,
+            pageLoading: true,
 
             pageSize: 10,
 
             controller: {
-                loadData: function() {
+                loadData: function(filter) {
                     return $.ajax({
                         type: "GET",
                         url: "/attendance/list",
                         data: {
                             name: $("#searchName").val(),
-                            workDate: $("#searchWorkDate").val()
+                            workDate: $("#searchWorkDate").val(),
+                            page: (filter.pageIndex || 1) - 1,
+                            size: filter.pageSize || 10
                         }
+                    }).then(function(response) {
+                        console.log("==============response")
+                        console.log(response)
+                        return {
+                            data: response.content,
+                            itemsCount: response.totalElements
+                        };
                     });
-                },
-                // insertItem: function(item) {
-                //     return $.ajax({
-                //         type: "POST",
-                //         url: "/dept/register",
-                //         data: JSON.stringify(item),
-                //         contentType: "application/json"
-                //     });
-                // },
-                // updateItem: function(item) {
-                //     return $.ajax({
-                //         type: "PUT",
-                //         url: "/api/employees/" + item.id,
-                //         data: JSON.stringify(item),
-                //         contentType: "application/json"
-                //     });
-                // },
-                // deleteItem: function(item) {
-                //     return $.ajax({
-                //         type: "DELETE",
-                //         url: "/api/employees/" + item.id
-                //     });
-                // }
+                }
             },
             fields: [
                 { name: "user.name", title:"이름", type: "text", width: 150},
@@ -164,7 +152,6 @@
                 { name: "late_minutes", title:"지각시간", type: "text", width: 100 },
                 { name: "early_leave_minutes", title:"조퇴시간", type: "text", width: 100 },
                 { name: "attendance_status", title:"상태", type: "text", width: 100 },
-                // { type: "control" }
             ]
         });
 

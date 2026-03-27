@@ -2,6 +2,8 @@ package com.erp.hrms.Repository;
 
 import com.erp.hrms.Entity.Attendance;
 import com.erp.hrms.dto.AttendanceSummaryDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,10 +14,13 @@ import java.util.List;
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     @Query("SELECT a FROM Attendance a JOIN FETCH a.user u " +
-           "WHERE (:name IS NULL OR u.name LIKE %:name%) " +
-           "AND (:workDate IS NULL OR a.work_date = :workDate)")
-    List<Attendance> search(@Param("name") String name, @Param("workDate") LocalDate workDate);
-
+            "WHERE (:name IS NULL OR u.name LIKE %:name%) " +
+            "AND (:workDate IS NULL OR a.work_date = :workDate)")
+    Page<Attendance> search(
+            @Param("name") String name,
+            @Param("workDate") LocalDate workDate,
+            Pageable pageable
+    );
     @Query(value = """
         SELECT 
             COUNT(*) as workDays,
