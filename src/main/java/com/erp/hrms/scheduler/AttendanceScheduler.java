@@ -26,7 +26,7 @@ public class AttendanceScheduler {
     private final HolidayRepository holidayRepository;
     private final AttendanceRepository attendanceRepository;
 
-    @Scheduled(cron = "0 00 09 * * *") // 매일 새벽 1시 실행
+    @Scheduled(cron = "0 00 18 * * *") // 매일 새벽 1시 실행
 //    @Scheduled(cron = "0 42 17 * * *") // 매일 오전 9시 30분 실행
     @Transactional
     public void createDailyAttendance() {
