@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -43,6 +44,11 @@ public class IndexController {
         session.setAttribute("email",userDetails.getUsername());
 
         LocalDate today = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
+
+        System.out.println("============================today");
+        System.out.println(today);
+        System.out.println(now);
 
         model.addAttribute("totalUser", userRepository.countByRole("ROLE_USER"));
         model.addAttribute("attendCount", attendanceRepository.countAttendToday(today));
